@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using System.Linq;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Owin;
@@ -21,31 +22,34 @@ namespace SecurityTraining
             ApplicationDbContext context = new ApplicationDbContext();
 
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
             const string admin = "Admin";
+            string[] defaultRoles = { admin, "Customer", "Sales" };
 
-            if (!roleManager.RoleExists(admin))
+            foreach (string roleName in defaultRoles)
             {
+                if (!roleManager.RoleExists(roleName))
+                {
+                    var role = new IdentityRole { Name = roleName };
+                    roleManager.Create(role);
+                }
+            }
 
-                // first we create Admin rool   
-                var role = new IdentityRole { Name = admin };
-                roleManager.Create(role);
-
-                //Here we create a Admin super user who will maintain the website                  
-
+            if (context.Users.SingleOrDefault(x => x.UserName == admin) == null)
+            {
                 var user = new ApplicationUser
                 {
                     UserName = admin,
                     Email = "wilbert@arentheym.com"
                 };
 
-                IdentityResult result = UserManager.Create(user, admin);
+                IdentityResult result = userManager.Create(user, admin);
 
                 //Add default User to Role Admin   
                 if (result.Succeeded)
                 {
-                    UserManager.AddToRole(user.Id, admin);
+                    userManager.AddToRole(user.Id, admin);
                 }
             }
         }
