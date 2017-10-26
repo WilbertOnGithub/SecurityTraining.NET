@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Owin;
 using SecurityTraining.Models;
+using System.Linq;
 
 [assembly: OwinStartupAttribute(typeof(SecurityTraining.Startup))]
 namespace SecurityTraining
@@ -44,9 +44,7 @@ namespace SecurityTraining
                     Email = "wilbert@arentheym.com"
                 };
 
-                IdentityResult result = userManager.Create(user, admin);
-
-                //Add default User to Role Admin   
+                IdentityResult result = userManager.Create(user, "password");
                 if (result.Succeeded)
                 {
                     userManager.AddToRole(user.Id, admin);
