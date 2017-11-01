@@ -17,15 +17,17 @@ namespace SecurityTraining
             CreateDefaultRolesAndUsers();
         }
 
-        private void CreateDefaultRolesAndUsers()                                                                      
+        private void CreateDefaultRolesAndUsers()                                                             
         {
             ApplicationDbContext context = new ApplicationDbContext();
 
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
-            const string admin = "Admin";
-            string[] defaultRoles = { admin, "Customer", "Sales" };
+            const string defaultSalesPerson = "DefaultVerkoper";
+            const string salesPerson = "Sales";
+            const string contact = "Contact";
+            string[] defaultRoles = { contact, salesPerson };
 
             foreach (string roleName in defaultRoles)
             {
@@ -36,18 +38,19 @@ namespace SecurityTraining
                 }
             }
 
-            if (context.Users.SingleOrDefault(x => x.UserName == admin) == null)
+            // Create default sales person with rights to login.
+            if (context.Users.SingleOrDefault(x => x.UserName == defaultSalesPerson) == null)
             {
                 var user = new ApplicationUser
                 {
-                    UserName = admin,
+                    UserName = defaultSalesPerson,
                     Email = "wilbert@arentheym.com"
                 };
 
                 IdentityResult result = userManager.Create(user, "password");
                 if (result.Succeeded)
                 {
-                    userManager.AddToRole(user.Id, admin);
+                    userManager.AddToRole(user.Id, salesPerson);
                 }
             }
         }
