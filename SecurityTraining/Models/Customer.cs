@@ -17,6 +17,11 @@ namespace SecurityTraining.Models
 
         public virtual IList<Order> Orders { get; set; }
 
+        [ForeignKey("SalesPerson")]
+        public string SalesPersonId { get; set; }
+
+        public virtual ApplicationUser SalesPerson { get; set; }
+
         public virtual IList<ApplicationUser> Contacts { get; set; }
     }
 }
