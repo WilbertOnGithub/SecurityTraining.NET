@@ -2,7 +2,7 @@
 
 namespace SecurityTraining.Models
 {
-    public class AddOrderViewModel
+    public class AddOrderForContactViewModel
     {
         [Required]
         [Display(Name = "Naam")]

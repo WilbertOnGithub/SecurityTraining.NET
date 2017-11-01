@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -8,16 +9,51 @@ namespace SecurityTraining.Controllers
 {
     public class OrderController : Controller
     {
-        [Authorize(Roles = "Sales,Contact")]
-        public ActionResult AddOrder()
+        [Authorize(Roles = "Contact")]
+        public ActionResult AddOrderForContact()
         {
             return View();
         }
 
-        [Authorize(Roles = "Sales,Contact")]
+        [Authorize(Roles = "Sales")]
+        public ActionResult AddOrderForSales()
+        {
+            ApplicationDbContext context = new ApplicationDbContext();
+
+            string currentUserId = User.Identity.GetUserId();
+
+            IList<Customer> customers = context.Customers.Where(x => x.SalesPerson.Id == currentUserId).ToList();
+            AddOrderForSalesViewModel model = new AddOrderForSalesViewModel{ Customers = customers };
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Contact")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddOrder(AddOrderViewModel model)
+        public async Task<ActionResult> AddOrderForContact(AddOrderForContactViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            ApplicationDbContext context = new ApplicationDbContext();
+
+            string currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = context.Users.FirstOrDefault(x => x.Id == currentUserId);
+
+            context.Orders.Add(new Order {Customer = currentUser.Customer, Name = model.Name});
+
+            await context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize(Roles = "Sales")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddOrderForSales(AddOrderForSalesViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -33,4 +69,5 @@ namespace SecurityTraining.Controllers
             return RedirectToAction("Index", "Home");
         }
     }
+
 }

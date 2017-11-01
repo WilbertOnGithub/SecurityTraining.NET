@@ -1,11 +1,11 @@
-﻿@model SecurityTraining.Models.AddOrderViewModel
+﻿@model SecurityTraining.Models.AddOrderForSalesViewModel
 @{
-    ViewBag.Title = "Add order";
+    ViewBag.Title = "Add order for sales";
 }
 
 <h2>@ViewBag.Title.</h2>
 
-@using (Html.BeginForm("AddOrder", "Order", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("AddOrderForSales", "Order", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     <h4>Add a new customer.</h4>
@@ -19,7 +19,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Add customer" />
+            <input type="submit" class="btn btn-default" value="Add order" />
         </div>
     </div>
 }
