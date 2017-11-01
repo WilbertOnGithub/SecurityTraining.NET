@@ -12,7 +12,6 @@ namespace SecurityTraining.Models
     {
         public int? CustomerId { get; set; }
 
-        //Key Mappings
         [ForeignKey("CustomerId")]
         public virtual Customer Customer { get; set; }
 

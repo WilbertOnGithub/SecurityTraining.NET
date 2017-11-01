@@ -24,7 +24,8 @@ namespace SecurityTraining
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
-            const string defaultSalesPerson = "DefaultVerkoper";
+            const string defaultSalesPersonName = "wilbert@arentheym.com";
+
             const string salesPerson = "Sales";
             const string contact = "Contact";
             string[] defaultRoles = { contact, salesPerson };
@@ -39,12 +40,12 @@ namespace SecurityTraining
             }
 
             // Create default sales person with rights to login.
-            if (context.Users.SingleOrDefault(x => x.UserName == defaultSalesPerson) == null)
+            if (context.Users.SingleOrDefault(x => x.UserName == defaultSalesPersonName) == null)
             {
                 var user = new ApplicationUser
                 {
-                    UserName = defaultSalesPerson,
-                    Email = "wilbert@arentheym.com"
+                    UserName = defaultSalesPersonName,
+                    Email = defaultSalesPersonName
                 };
 
                 IdentityResult result = userManager.Create(user, "password");
