@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SecurityTraining.Models
 {
@@ -8,6 +9,10 @@ namespace SecurityTraining.Models
         [Display(Name = "Naam")]
         public string Name { get; set; }
 
+        [Required]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
+        public DateTime DateTime { get; set; }
+        
         [Required]
         [Display(Name = "Klant")]
         public Customer Customer { get; set; }

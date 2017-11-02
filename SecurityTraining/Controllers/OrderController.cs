@@ -13,7 +13,16 @@ namespace SecurityTraining.Controllers
         [Authorize(Roles = "Contact")]
         public ActionResult AddOrderForContact()
         {
-            return View();
+            ApplicationDbContext context = new ApplicationDbContext();
+
+            string currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = context.Users.FirstOrDefault(x => x.Id == currentUserId);
+
+            return View(new AddOrderForContactViewModel
+                        {
+                            DateTime = DateTime.Now,
+                            Customer = currentUser.Customer
+                        });
         }
 
         [Authorize(Roles = "Sales")]
@@ -43,10 +52,7 @@ namespace SecurityTraining.Controllers
 
             ApplicationDbContext context = new ApplicationDbContext();
 
-            string currentUserId = User.Identity.GetUserId();
-            ApplicationUser currentUser = context.Users.FirstOrDefault(x => x.Id == currentUserId);
-
-            context.Orders.Add(new Order {Customer = currentUser.Customer, Name = model.Name});
+            context.Orders.Add(new Order {Customer = model.Customer, Name = model.Name, Date = model.DateTime});
 
             await context.SaveChangesAsync();
 
