@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -23,7 +24,9 @@ namespace SecurityTraining.Controllers
             string currentUserId = User.Identity.GetUserId();
 
             IList<Customer> customers = context.Customers.Where(x => x.SalesPerson.Id == currentUserId).ToList();
-            AddOrderForSalesViewModel model = new AddOrderForSalesViewModel{ Customers = customers };
+            AddOrderForSalesViewModel model = new AddOrderForSalesViewModel();
+            model.Customers = customers.Select(u => new SelectListItem {Text = u.Name, Value = u.Id.ToString()});
+            model.Date = DateTime.Now;
 
             return View(model);
         }
@@ -62,7 +65,7 @@ namespace SecurityTraining.Controllers
 
             ApplicationDbContext context = new ApplicationDbContext();
 
-            context.Orders.Add(new Order {Customer = model.Customer, Name = model.Name});
+            context.Orders.Add(new Order {CustomerId = Convert.ToInt32(model.CustomerId), Name = model.Name, Date = model.Date});
 
             await context.SaveChangesAsync();
 
