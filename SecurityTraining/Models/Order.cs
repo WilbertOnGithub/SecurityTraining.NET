@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace SecurityTraining.Models
 {
@@ -11,8 +13,16 @@ namespace SecurityTraining.Models
         public int Id { get; set; }
 
         [Required]
+        public DateTime Date { get; set; }
+        
+        [Required]
         public string Name { get; set; }
 
+        public Decimal TotalAmount()
+        {
+            return Products.Sum(product => product.Price * product.Number);
+        }
+        
         public virtual IList<Product> Products { get; set; }
 
         public virtual Customer Customer { get; set; }
