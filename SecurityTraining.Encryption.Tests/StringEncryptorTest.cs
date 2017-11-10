@@ -18,7 +18,7 @@ namespace SecurityTraining.Encryption.Tests
 
             string decryptedText = StringEncryptor.Decrypt(encryptedText, key);
 
-            decryptedText.Should().Be(plainText, "the encryptor decrypted the encrypted test.");
+            decryptedText.Should().Be(plainText);
         }
 
         [Test]
